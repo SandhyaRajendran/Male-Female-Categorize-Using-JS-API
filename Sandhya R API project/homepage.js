@@ -1,0 +1,184 @@
+//here i appended all the details about the users like image and thier name
+const allUsers = document.querySelector('.allUsers')
+// console.log(allUsers)
+
+//here i targeting the buttons for filter
+const buttons = document.querySelectorAll('button')
+// console.log(buttons)
+
+//In here i stored all the jsonValues
+let users = []
+
+const view = document.querySelector('.view')
+// console.log(view)
+//here i targeted the input bar for filterinput
+let plusTwenty = 21;
+const idd = document.querySelector('i')
+// console.log(idd)
+//here i do all the functions
+
+
+window.addEventListener('DOMContentLoaded', ()=>{
+    view.addEventListener('click', function () {
+        plusTwenty += 20;
+        // console.log(plusTwenty)
+        contentLoad()
+    })
+    contentLoad()
+});
+
+function contentLoad() {
+    fetch(`https://randomuser.me/api?results=${plusTwenty}`)
+        .then(jsonVal => jsonVal.json())
+        .then(valuees => {
+            idd.style.display = 'none';
+            //here i pushed all the json values to users array
+            users.push(valuees)
+            //here i looped for take the users results details
+            for (let i = 0; i < users.length; i++) {
+                // console.log(users[i]) //{results: Array(20), info: {…}}
+
+                //here i stored all the users result details like thier name,age and more
+                let resultsFromValuess = users[i].results
+                // console.log(resultsFromValuess) // all results list(20) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+
+                //here i looped the users values for using all the values
+                for (let x = 0; x < buttons.length; x++) {
+                    // console.log(buttons[x])
+                    buttons[x].addEventListener('click', (e) => {
+                        if (e.target.classList.contains('men')) {
+                            // alert('Here you see all the male users')
+                            //if the targeted button is male it removes all the childelemts to the particular
+                            removeAllChildNodes(allUser);
+                            //for male button
+                            for (let j = 0; j < resultsFromValuess.length; j++) {
+                                if (resultsFromValuess[j].gender == 'male') {
+                                    let newDiv = document.createElement('div')
+                                    let imgs = document.createElement('img')
+                                    let lli = document.createElement('span')
+
+                                    newDiv.setAttribute('class', 'newdiv')
+                                    imgs.setAttribute("id", "images")
+                                    lli.setAttribute('class', 'lis')
+
+                                    imgs.src = resultsFromValuess[j].picture.large
+                                    lli.innerText = resultsFromValuess[j].name.first + ' ' + resultsFromValuess[j].name.last
+
+                                    let atag = document.createElement('a')
+                                    atag.href = (`userpage.html?id=${resultsFromValuess[j].id.value}`);
+
+                                    atag.appendChild(imgs)
+                                    newDiv.appendChild(atag)
+                                    newDiv.appendChild(lli)
+                                    allUsers.append(newDiv)
+                                    console.log(resultsFromValuess[j].gender)
+                                    
+                                    view.style.display = 'none'
+                                }
+                            }
+                        }
+                            //for female button
+                        else if (e.target.classList.contains('women')) {
+                            // alert('Here you see all the female users')
+                            removeAllChildNodes(allUser);
+                            for (let j = 0; j < resultsFromValuess.length; j++) {
+                                if (resultsFromValuess[j].gender == 'female') {
+                                    let newDiv = document.createElement('div')
+                                    let imgs = document.createElement('img')
+                                    let lli = document.createElement('span')
+
+                                    newDiv.setAttribute('class', 'newdiv')
+                                    imgs.setAttribute("id", "images")
+                                    lli.setAttribute('class', 'lis')
+
+                                    imgs.src = resultsFromValuess[j].picture.large
+                                    lli.innerText = resultsFromValuess[j].name.first + ' ' + resultsFromValuess[j].name.last
+
+                                    let atag = document.createElement('a')
+                                    atag.href = (`userpage.html?id=${resultsFromValuess[j].id.value}`);
+
+                                    atag.appendChild(imgs)
+                                    newDiv.appendChild(atag)
+                                    newDiv.appendChild(lli)
+                                    allUsers.append(newDiv)
+                                    console.log(resultsFromValuess[j].gender)
+                                    view.style.display = 'none'
+                                }
+                            }
+                        }
+                    })
+                }
+                for (let j = 0; j < resultsFromValuess.length; j++) {
+                    //creating all the elements
+                    let newDiv = document.createElement('div')
+                    let imgs = document.createElement('img')
+                    let lli = document.createElement('span')
+
+                    //attributes are added to the elements
+                    newDiv.setAttribute('class', 'newdiv')
+                    imgs.setAttribute("id", "images")
+                    lli.setAttribute('class', 'lis')
+
+                    // assign all the values to the elements
+                    imgs.src = resultsFromValuess[j].picture.large
+                    lli.innerText = resultsFromValuess[j].name.first + ' ' + resultsFromValuess[j].name.last
+
+                    //a tag for rediecting the page during the click of image
+                    let atag = document.createElement('a')
+                    atag.href = (`userpage.html?id=${resultsFromValuess[j].id.value}`);
+                    // console.log(atag)
+
+                    //appended the values
+                    atag.appendChild(imgs)
+                    newDiv.appendChild(atag)
+                    newDiv.appendChild(lli)
+                    allUsers.append(newDiv)
+                }
+                // Get input element
+                let filterInput = document.querySelector('#filter')
+                
+                // Add event listener
+                filterInput.addEventListener('keyup', filterNames);
+
+                const newdivs = document.querySelectorAll('.newdiv')
+                // console.log(newdivs)
+                const allLiss = document.querySelectorAll('.lis')
+
+                function filterNames() {
+                    // Get value of input
+                    let filterValue = document.getElementById('filter').value.toUpperCase();
+                    // Get lis from ul
+                    //   console.log(allLiss)
+
+                    for (let i = 0; i < allLiss.length; i++) {
+                        let valuues = allLiss[i].innerHTML.toUpperCase()
+                        // console.log(valuues)
+                        if (valuues.indexOf(filterValue) > -1) {
+                            newdivs[i].style.display = 'block';
+                        } else {
+                            newdivs[i].style.display = 'none';
+                        }
+                    }
+
+                }
+            }
+        })
+}
+
+//for removing the child emlemts from the div.
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+const allUser = document.querySelector('.allUsers')
+
+
+
+
+
+
+
+
+
